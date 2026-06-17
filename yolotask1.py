@@ -1,7 +1,7 @@
 from ultralytics import YOLO
 import cv2
 
-model = YOLO('spf3.pt')
+model = YOLO('yolov8s.pt')
 
 cap = cv2.VideoCapture(0) 
 
@@ -10,7 +10,7 @@ while True:
     if not ret:
         break
 
-    results = model.predict(frame,conf=0.8,device=0,verbose=True)
+    results = model.predict(frame,conf=0.7,device=0,verbose=True)
 
     for r in results:
         frame = r.plot()
@@ -22,6 +22,19 @@ while True:
 
 cap.release()
 cv2.destroyAllWindows()
+
+# import cv2
+# cap=cv2.VideoCapture(0)
+# while True:
+#     ret,frame=cap.read()
+#     if not ret:
+#         break
+#     cv2.imshow('frame',frame)
+#     if cv2.waitKey(1) & 0xFF==ord('q'):
+#         break
+
+# cap.release()
+# cv2.destroyAllWindows()
 
 
 # import cv2

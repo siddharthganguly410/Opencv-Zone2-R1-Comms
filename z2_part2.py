@@ -2,24 +2,21 @@
 import cv2
 from ultralytics import YOLO
 import numpy as np
-import serial
-import time
+
 from zone2_leftDetect import process_left as ld
 from zone2_rightDetect import process_right as rd
 from zone2_centerDetect import process_center as cd
 from zone2_path import path
 FRAME_WIDTH = 640
-ser = serial.Serial('COM5', 9600,timeout=0.01)
-time.sleep(2)
 CAM_FOV = 80
 ZONE_1_ACTIVE = True
 ZONE_2_ACTIVE = False
 process_zone1 = False
-model = YOLO("symbol240_9.pt")
-model2 = YOLO("spf4.pt")
-cap1 = cv2.VideoCapture(0)   # Zone 2 Left
-cap2 = cv2.VideoCapture(1)   
-cap3 = cv2.VideoCapture(2)   # Zone 1 Camera
+model = YOLO("symbol300.pt")
+model2 = YOLO("spf6.pt")
+cap1 = cv2.VideoCapture(2)   # Zone 2 Left
+cap2 = cv2.VideoCapture(0)   
+cap3 = cv2.VideoCapture(1)   # Zone 1 Camera
 curr_position = [0, 0]
 curr_row = 0
 curr_column = 0
@@ -34,15 +31,7 @@ scroll_list = ["Empty", "R1 KFS", "R2 KFS", "Fake"]
 scroll_dict_empty = {i: "Empty" for i in range(1, 13)}
 
 while True:
-    key = None
-    if ser.in_waiting:
-        try:
-            key = ser.readline().decode(errors='ignore').strip().lower()
-            if key:
-                key = key[0]
-            print("Received:", key)
-        except:
-            key = None
+    key = cv2.waitKey(1) & 0xFF
 
     if ZONE_1_ACTIVE:
         ret3, f3 = cap3.read()
@@ -75,7 +64,7 @@ while True:
                 horizontal_offset = zone1_xc - 320
                 zone1_angle = (horizontal_offset / FRAME_WIDTH) * CAM_FOV
 
-        if key == 'z':
+        if key == ord('z'):
             if zone1_xc is not None and 260 <= zone1_xc <= 380:
                 process_zone1 = True
                 print("YES | Angle:", zone1_angle)
@@ -98,7 +87,6 @@ while True:
                 cv2.destroyWindow('Zone 1')
                 
                 
-                
             elif 10000 <= areag <= 30000:
                 print("REPEAT")
                 
@@ -108,7 +96,6 @@ while True:
         cv2.line(f3,(260,0),(260,480),(255,0,0),1) # VERTICAL CENTER LINES 1  --ZONE 1
         cv2.line(f3,(380,0),(380,480),(255,0,0),1) # VERTICAL CENTER LINES 2  --ZONE 1
         cv2.imshow("Zone 1", f3)
-        cv2.waitKey(1)
 
     if ZONE_2_ACTIVE==True:
         ret1, f1 = cap1.read()
@@ -131,8 +118,8 @@ while True:
 
         cv2.imshow("Left", f1)
         cv2.imshow("Right", f2)
-        cv2.waitKey(1)
-        if key=='l':
+
+        if key==ord('l'):
             right_class,pos1=rd(results2,f2,model)
             left_class,pos2=ld(results1,f1,model)
             center_class=cd(pos1,pos2)
@@ -145,22 +132,22 @@ while True:
             curr_position, curr_column, class_of_next,data_to_next=path(scroll_dict_empty,curr_position,curr_column,curr_row,right_class,center_class,left_class,class_of_next)
             print(curr_position[0])
             print(class_of_next)
-            # print(data_to_next)
-        if key=='r':
+            print(data_to_next)
+        if key==ord('r'):
             right_class,pos1=rd(results2,f2,model)
             left_class,pos2=ld(results1,f1,model)
             center_class=cd(pos1,pos2)
             curr_position, curr_column, class_of_next,data_to_next=path(scroll_dict_empty,curr_position,curr_column,curr_row,right_class,center_class,left_class,class_of_next)
             print("Next_position : ",curr_position[0])
-            # print("Next_Column",curr_column)
-            # print("Data :",data_to_next)
+            print("Next_Column",curr_column)
+            print("Data :",data_to_next)
             print("Class of next : ",class_of_next)
-            # print(scroll_dict_empty)
+            print(scroll_dict_empty)
 
-    if key == 'q':
+    if key == ord('q'):
         break
 
-# ------------------ CLEANUP ------------------
+
 if cap1: cap1.release()
 if cap2: cap2.release()
 if cap3: cap3.release()

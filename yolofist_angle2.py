@@ -2,7 +2,7 @@ from ultralytics import YOLO
 import cv2
 import math
 
-model = YOLO('spf3.pt')
+model = YOLO('yolov8s.pt')
 
 object_width = 8.2
 focal = 740  
@@ -23,7 +23,7 @@ while True:
         annotated_frame = result.plot()
 
         
-        cv2.putText(annotated_frame, "240,320", (330,250),cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0,255,0), 2)
+        cv2.putText(annotated_frame, "center", (330,250),cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0,255,0), 2)
         cv2.circle(annotated_frame, FRAME_CENTER1, 3, (0,255,0), -1)
 
         cx0, cy0 = FRAME_CENTER1

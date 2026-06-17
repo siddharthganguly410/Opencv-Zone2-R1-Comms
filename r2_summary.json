@@ -1,0 +1,34 @@
+{
+  "config": {
+    "r2_real_scrolls": [
+      2,
+      5,
+      8,
+      11
+    ],
+    "fake_scroll": 6,
+    "r1_scrolls": [
+      1,
+      3,
+      10
+    ]
+  },
+  "training_episodes": 4008,
+  "training_time_s": 0.66,
+  "q_table_states": 191,
+  "eval_success_rate": 100.0,
+  "eval_avg_steps": 7.0,
+  "eval_min_steps": 7,
+  "best_path": [
+    2,
+    "C2",
+    "C5",
+    5,
+    "C8",
+    8,
+    "C11",
+    11,
+    "EXIT"
+  ],
+  "best_reward": 1197.0
+}

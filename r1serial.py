@@ -2,7 +2,7 @@ import serial
 import time
 import cv2
 
-ser = serial.Serial('COM3', 115200)
+ser = serial.Serial('COM5', 115200)
 time.sleep(2)
 
 print("Reading data ...")
@@ -17,7 +17,8 @@ while True:
         
             cv2.destroyAllWindows() 
             tag=cv2.imread('atag0.png')
-            cv2.imshow('TAG 0 :',tag)
+            cv2.imshow('Frame :',tag)
+
     
         
         if cmd=='next':
