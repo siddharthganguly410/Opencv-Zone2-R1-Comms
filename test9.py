@@ -1,0 +1,17 @@
+import cv2
+import numpy as np
+import matplotlib.pyplot as plt
+#PART 13
+img=cv2.imread('opencv-corner-detection-sample.jpg')
+gray=cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
+gray=np.float32(gray)
+corners=cv2.goodFeaturesToTrack(gray,100, 0.01,10) # no. of corners,quality,min. distance between 2 corners
+corners=np.int0(corners)
+print(corners)
+for corner in corners:
+    x,y=corner.ravel()
+    cv2.circle(img,(x,y),5,255,-1)
+
+cv2.imshow('corners',img)
+cv2.waitKey()
+cv2.destroyAllWindows()
